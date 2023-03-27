@@ -13,13 +13,11 @@ public class TestingNetworkUI : MonoBehaviour
     {
         hostButton.onClick.AddListener(() =>
         {
-            Debug.Log("Host");
             NetworkManager.Singleton.StartHost();
             Hide();
         });
         clientButton.onClick.AddListener(() =>
         {
-            Debug.Log("CLient");
             NetworkManager.Singleton.StartClient();
             Hide();
         });

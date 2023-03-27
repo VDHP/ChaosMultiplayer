@@ -55,7 +55,6 @@ public class StoveSound : MonoBehaviour
         while (isFired)
         {
             SoundManager.Instance.PlayWarningBurnSound(stoveCounter.transform.position);
-            Debug.Log(isFired);
             yield return new WaitForSeconds(warningPlaySoundInterval);
         }
     }
