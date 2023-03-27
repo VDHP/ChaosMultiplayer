@@ -1,18 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode.Components;
 using UnityEngine;
 
-public class OwnerNetworkAnimation : MonoBehaviour
+public class OwnerNetworkAnimation : NetworkAnimator
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override bool OnIsServerAuthoritative()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return false;
     }
 }
