@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DeliveryManager : NetworkBehaviour
@@ -30,12 +31,13 @@ public class DeliveryManager : NetworkBehaviour
     }
     private void Start()
     {
-        if(!IsServer) { return; }
         StartCoroutine(CountTimeSpawnOrder());
     }
+
     IEnumerator CountTimeSpawnOrder()
     {
         // amount of Recipe Waiting current 
+        if (!IsServer) yield return null;
         amountOrder = 0;
         while (true)
         {
@@ -94,16 +96,36 @@ public class DeliveryManager : NetworkBehaviour
                 if(plateContentsMatchesRecipe)
                 {
                     //player delivered the correct recipe   
-                    successRecipeAmount++;
-                    waitingRecipeSOList.RemoveAt(i);
-                    amountOrder--;
-                    OnRecipeComplete?.Invoke();
-                    OnDeliverySucced?.Invoke();
+                    DeliveryCorrectRecipeServerRpc(i);
                     return;
                 }
             }
         }
         // player deliverd the wrong recipe
+        DeliveryInCorrectRecipeServerRpc();
+    }
+    [ServerRpc(RequireOwnership =false)]
+    void DeliveryCorrectRecipeServerRpc(int waitingRecipeSOIndex)
+    {
+        DeliveryCorrectRecipeClientRpc(waitingRecipeSOIndex);
+    }
+    [ClientRpc]
+    void DeliveryCorrectRecipeClientRpc(int waitingRecipeSOIndex)
+    {
+        successRecipeAmount++;
+        waitingRecipeSOList.RemoveAt(waitingRecipeSOIndex);
+        amountOrder--;
+        OnRecipeComplete?.Invoke();
+        OnDeliverySucced?.Invoke();
+    }
+    [ServerRpc(RequireOwnership = false)]
+    void DeliveryInCorrectRecipeServerRpc()
+    {
+        DeliveryInCorrectRecipeClientRpc();
+    }
+    [ClientRpc]
+    void DeliveryInCorrectRecipeClientRpc()
+    {
         OnDeliveryFailded?.Invoke();
     }
     public List<RecipeSO> GetWaitingRecipeSOList()
