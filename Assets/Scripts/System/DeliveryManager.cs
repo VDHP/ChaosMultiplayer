@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class DeliveryManager : MonoBehaviour
+public class DeliveryManager : NetworkBehaviour
 {
     [SerializeField] float timeToSpawnOrder;
     [SerializeField] float amountOrderMax;
@@ -29,6 +30,7 @@ public class DeliveryManager : MonoBehaviour
     }
     private void Start()
     {
+        if(!IsServer) { return; }
         StartCoroutine(CountTimeSpawnOrder());
     }
     IEnumerator CountTimeSpawnOrder()
@@ -42,15 +44,22 @@ public class DeliveryManager : MonoBehaviour
                 yield return new WaitForSeconds(timeToSpawnOrder);
 
                 amountOrder++;
-                RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0,recipeListSO.recipeSOList.Count)];
-                waitingRecipeSOList.Add(waitingRecipeSO);
-                OnRecipeSpawn?.Invoke();
+
+                int newWaitingRecipeIndex = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
+                SpawnNewWaitingRecipeClientRpc(newWaitingRecipeIndex);
             }
             else
             {
                 yield return null;
             }
         }
+    }
+    [ClientRpc]
+    void SpawnNewWaitingRecipeClientRpc(int newWaitingRecipeIndex)
+    {
+        RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[newWaitingRecipeIndex];
+        waitingRecipeSOList.Add(waitingRecipeSO);
+        OnRecipeSpawn?.Invoke();
     }
     public void DeliverRecipe(PlatesKitchenObject platesKitchenObject)
     {
