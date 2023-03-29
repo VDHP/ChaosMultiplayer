@@ -12,7 +12,9 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] Transform kitchentObjectHoldPoint;
 
-    /*public static PlayerController Instance { get; private set; }*/
+
+    public static PlayerController LocalInstance { get; private set; }
+    public static event Action OnAnyPlayerSpawned;
 
     public event Action OnPickUpSomeThing;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
@@ -31,6 +33,18 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
         PlayerInput.Instance.OnInteractAction += PlayerInputVector_OnInteractAction;
         PlayerInput.Instance.OnInteractAlternate += GameInput_OnInteractAlternate;
     }
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
+        OnAnyPlayerSpawned?.Invoke();
+    }
+    public static void ResetStaticData()
+    {
+        OnAnyPlayerSpawned = null;
+    }
 
     private void GameInput_OnInteractAlternate()
     {
@@ -48,10 +62,6 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
         {
             selectedCounter.Interact(this);
         } 
-    }
-    private void Awake()
-    {
-        /*Instance = this;*/
     }
 
     // Update is called once per frame
