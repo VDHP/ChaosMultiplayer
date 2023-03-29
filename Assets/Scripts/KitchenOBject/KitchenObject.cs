@@ -6,7 +6,14 @@ using UnityEngine;
 public class KitchenObject : NetworkBehaviour
 {
     [SerializeField] KitchenObjectSO kitchenObjectSO;
+    FollowTransform followTransform;
+
     IKitchenObjectParent kitchenObjectParent;
+
+    private void Awake()
+    {
+        followTransform = GetComponent<FollowTransform>();
+    }
     public KitchenObjectSO GetKitchenObjectSo()
     {
         return kitchenObjectSO;
@@ -22,10 +29,9 @@ public class KitchenObject : NetworkBehaviour
         {
             Debug.LogError("Counter already have KitchenObject!");
         }
-        kitchenObjectParent.SetKitchenObject(this); 
+        kitchenObjectParent.SetKitchenObject(this);
 
-        /*transform.parent = kitchenObjectParent.GetKitchenFollowTransform();
-        transform.localPosition = Vector3.zero;*/
+        followTransform.SetTargetTransform(kitchenObjectParent.GetKitchenFollowTransform());
     }
     public IKitchenObjectParent GetKitchenObjectParent()
     {
