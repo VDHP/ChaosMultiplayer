@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: 3eaac4804a84bb54b99648fdfa0f9c52, type: 2}
+  followTransform: {fileID: 6910195700776905592}
   validKitchenObjectSOList:
   - {fileID: 11400000, guid: e43050794e25c394e9f24d0883d0738f, type: 2}
   - {fileID: 11400000, guid: 06939462a3093f04b8532d1d208649f7, type: 2}

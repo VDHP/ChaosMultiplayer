@@ -732,11 +732,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter  CheeseBlock
       objectReference: {fileID: 0}
-    - target: {fileID: 6829322944268291595, guid: 2cfedb7fe27dcd74e938e783b21cd16b,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 10027631
-      objectReference: {fileID: 0}
     - target: {fileID: 7943873835189935299, guid: 2cfedb7fe27dcd74e938e783b21cd16b,
         type: 3}
       propertyPath: m_RootOrder
@@ -2862,11 +2857,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ContainerCounter  Bread
-      objectReference: {fileID: 0}
-    - target: {fileID: 6829322944268291595, guid: f1dfe34cb1e3df54bb7582a87d37cefc,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2715277775
       objectReference: {fileID: 0}
     - target: {fileID: 7943873835189935299, guid: f1dfe34cb1e3df54bb7582a87d37cefc,
         type: 3}
@@ -6493,11 +6483,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ContainerCounter  Cabbage
-      objectReference: {fileID: 0}
-    - target: {fileID: 6829322944268291595, guid: 3165edd67a1caaa4fb20fc8f502588e2,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 412436309
       objectReference: {fileID: 0}
     - target: {fileID: 7615528128496564556, guid: 3165edd67a1caaa4fb20fc8f502588e2,
         type: 3}
@@ -11766,11 +11751,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter Tomato
       objectReference: {fileID: 0}
-    - target: {fileID: 6829322944268291595, guid: 7eb842fc918d27841a323bac6d83922e,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2944514482
-      objectReference: {fileID: 0}
     - target: {fileID: 7943873835189935299, guid: 7eb842fc918d27841a323bac6d83922e,
         type: 3}
       propertyPath: m_RootOrder
@@ -12243,11 +12223,6 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1046411681
-      objectReference: {fileID: 0}
-    - target: {fileID: 6829322944268291595, guid: 840b5fc4072dc194c91d6c5cfddd1615,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2465993776
       objectReference: {fileID: 0}
     - target: {fileID: 7943873835189935299, guid: 840b5fc4072dc194c91d6c5cfddd1615,
         type: 3}
@@ -13303,6 +13278,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1154749158}
     m_Modifications:
+    - target: {fileID: -2617755168362134767, guid: 9046ff65d9ef785448ec83004946584e,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 90064199
+      objectReference: {fileID: 0}
     - target: {fileID: 1463911026653722266, guid: 9046ff65d9ef785448ec83004946584e,
         type: 3}
       propertyPath: m_Name
