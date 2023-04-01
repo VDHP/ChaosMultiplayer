@@ -32,7 +32,8 @@ public class ClearCounter : BaseCounter
                     if (platesKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSo()))
                     {
                         // ingredient is valid 
-                        GetKitchenObject().DestroySelf();
+                        
+                        KitchenObject.DestroyKitchenObject(GetKitchenObject());
                     }
                 }
                 // player isn't carrying plates but something else
@@ -41,7 +42,7 @@ public class ClearCounter : BaseCounter
                     // counter is holding a plate
                     if (platesKitchenObject.TryAddIngredient(playerController.GetKitchenObject().GetKitchenObjectSo()))
                     {
-                        playerController.GetKitchenObject().DestroySelf();
+                        KitchenObject.DestroyKitchenObject(playerController.GetKitchenObject());
                     }
                 }
             }
