@@ -114,7 +114,7 @@ public class StoveCounter : BaseCounter,IHasProgress
             if (!playerController.HasKitchenObject())
             {
                 GetKitchenObject().SetKitchenObjectParent(playerController);
-                SetStateIdleServerRpc();
+                SetStateIdleServerRpc(); 
             }
             else
             {
