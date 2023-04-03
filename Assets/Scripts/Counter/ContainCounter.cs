@@ -15,16 +15,16 @@ public class ContainCounter : BaseCounter
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, playerController);
             InteractLogicServerRpc();
         }
-        /*else
+        else
         {
-            if(playerController.GetKitchenObject().GetKitchenObjectSo() == kitchenObjectSO)
+            if (playerController.GetKitchenObject().GetKitchenObjectSO() == kitchenObjectSO)
             {
-                Destroy(playerController.GetKitchenObject().gameObject);
-                playerController.ClearKitchenObject();
+                KitchenObject.DestroyKitchenObject(playerController.GetKitchenObject());
                 InteractLogicServerRpc();
             }
-        }*/
+        }
     }
+   
     [ServerRpc(RequireOwnership =false)]
     void InteractLogicServerRpc()
     {
@@ -34,5 +34,9 @@ public class ContainCounter : BaseCounter
     void InteractLogicClientRpc()
     {
         OnAnimateAction?.Invoke();
+    }
+    public KitchenObjectSO GetKitchenObjectSO()
+    {
+        return kitchenObjectSO;
     }
 }

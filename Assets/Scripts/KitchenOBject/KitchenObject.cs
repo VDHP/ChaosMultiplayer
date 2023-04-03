@@ -14,7 +14,7 @@ public class KitchenObject : NetworkBehaviour
     {
         followTransform = GetComponent<FollowTransform>();
     }
-    public KitchenObjectSO GetKitchenObjectSo()
+    public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }

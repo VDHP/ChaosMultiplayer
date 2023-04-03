@@ -67,6 +67,16 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
             {
                 return;
             }
+            else if (selectedCounter is ContainCounter )
+            {
+                if (HasKitchenObject())
+                {
+                    if(kitchenObject.GetKitchenObjectSO() != selectedCounter.GetComponent<ContainCounter>().GetKitchenObjectSO())
+                    {
+                        return;
+                    }
+                }
+            }
             selectedCounter.Interact(this);
             OnAnyPlayerPickedUpSomeThing(this);
         }
