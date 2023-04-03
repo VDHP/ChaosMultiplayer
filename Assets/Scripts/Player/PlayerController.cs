@@ -5,7 +5,7 @@ using System;
 using UnityEngine.Networking;
 using Unity.Netcode;
 
-public class PlayerController : NetworkBehaviour , IKitchenObjectParent
+public class PlayerController : NetworkBehaviour, IKitchenObjectParent
 {
     [SerializeField] private float speed;
     [SerializeField] private float rotateSpeed;
@@ -61,17 +61,31 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
     private void PlayerInputVector_OnInteractAction(object sender, System.EventArgs e)
     {
         if (!GameManager.Instance.IsGamePlaying()) return;
-        if (selectedCounter!= null)
+        if (selectedCounter != null)
         {
+            if (selectedCounter is PlatesCounter && HasKitchenObject())
+            {
+                return;
+            }
+            else if (selectedCounter is ContainCounter )
+            {
+                if (HasKitchenObject())
+                {
+                    if(kitchenObject.GetKitchenObjectSO() != selectedCounter.GetComponent<ContainCounter>().GetKitchenObjectSO())
+                    {
+                        return;
+                    }
+                }
+            }
             selectedCounter.Interact(this);
             OnAnyPlayerPickedUpSomeThing(this);
-        } 
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!IsOwner) return;
+        if (!IsOwner) return;
         HandleMovement();
         HandleInteract();
     }
@@ -94,7 +108,7 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
             // Can't move towards moveDirection
             // Check whether player can move horizontally
             Vector3 moveDirectionX = new Vector3(moveDirection.x, 0f, 0f);
-            if(moveDirectionX != Vector3.zero)
+            if (moveDirectionX != Vector3.zero)
             {
                 canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionX, distanceMove);
                 if (canMove)
@@ -105,16 +119,16 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
                 {
                     // Check whether player can move vertically 
                     Vector3 moveDirectionZ = new Vector3(0f, 0f, moveDirection.z);
-                    if(moveDirectionZ != Vector3.zero)
+                    if (moveDirectionZ != Vector3.zero)
                     {
                         canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionZ, distanceMove);
                         if (canMove)
                         {
                             moveDirection = moveDirectionZ.normalized;
                         }
-                    }     
+                    }
                 }
-            }  
+            }
         }
         if (canMove)
         {
@@ -129,7 +143,7 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
         Vector2 playerInput = PlayerInput.Instance.GetInputPlayerNormalized();
         Vector3 moveDirection = new Vector3(playerInput.x, 0f, playerInput.y);
 
-        if(moveDirection!= Vector3.zero)
+        if (moveDirection != Vector3.zero)
         {
             /// take direct character facing to 
             Vector3 directFacing = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
@@ -138,11 +152,11 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
         float interactDistance = 2f;
         if (Physics.Raycast(transform.position, lastInteract, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
-            if(raycastHit.transform.TryGetComponent(out BaseCounter baseCounter) )
+            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                if(baseCounter != selectedCounter)
+                if (baseCounter != selectedCounter)
                 {
-                    SetSelectedCounter( baseCounter);
+                    SetSelectedCounter(baseCounter);
                 }
             }
             else
@@ -157,7 +171,7 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
     }
     void SetSelectedCounter(BaseCounter newbaseCounter)
     {
-        selectedCounter= newbaseCounter;
+        selectedCounter = newbaseCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
@@ -176,7 +190,7 @@ public class PlayerController : NetworkBehaviour , IKitchenObjectParent
     {
         kitchenObject = kitchenObjectPr;
 
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
             OnPickUpSomeThing?.Invoke();
         }

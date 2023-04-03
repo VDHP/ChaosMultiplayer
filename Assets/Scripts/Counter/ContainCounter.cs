@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ContainCounter : BaseCounter
@@ -12,16 +13,30 @@ public class ContainCounter : BaseCounter
         if (!playerController.HasKitchenObject())
         {
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, playerController);
-            OnAnimateAction?.Invoke();
+            InteractLogicServerRpc();
         }
         else
         {
-            if(playerController.GetKitchenObject().GetKitchenObjectSo() == kitchenObjectSO)
+            if (playerController.GetKitchenObject().GetKitchenObjectSO() == kitchenObjectSO)
             {
-                Destroy(playerController.GetKitchenObject().gameObject);
-                playerController.ClearKitchenObject();
-                OnAnimateAction?.Invoke();
+                KitchenObject.DestroyKitchenObject(playerController.GetKitchenObject());
+                InteractLogicServerRpc();
             }
         }
+    }
+   
+    [ServerRpc(RequireOwnership =false)]
+    void InteractLogicServerRpc()
+    {
+        InteractLogicClientRpc();
+    }
+    [ClientRpc]
+    void InteractLogicClientRpc()
+    {
+        OnAnimateAction?.Invoke();
+    }
+    public KitchenObjectSO GetKitchenObjectSO()
+    {
+        return kitchenObjectSO;
     }
 }

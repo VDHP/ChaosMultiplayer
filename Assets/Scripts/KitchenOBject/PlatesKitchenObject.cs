@@ -10,8 +10,9 @@ public class PlatesKitchenObject : KitchenObject
 
     public static event Action<PlatesKitchenObject> OnIngredientAddedSound;
     public event Action<KitchenObjectSO> OnIngredientAdded;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         kitchenObjectSOList= new List<KitchenObjectSO>();
     }
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)

@@ -25,17 +25,38 @@ public class KitchenObjectMultiplayer : NetworkBehaviour
         kitchenNetworkObject.Spawn(true);
 
         KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
-        // take network object that was originallu sent 
+        // take network object that was originally sent 
         kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
         IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
     }
-    int GetKitchenObjectSOIndexOf(KitchenObjectSO kitchenObjectSO)
+    public int GetKitchenObjectSOIndexOf(KitchenObjectSO kitchenObjectSO)
     {
         return kitchenObjectSOsList.kitchenObjectSOsList.IndexOf(kitchenObjectSO);
     }
-    KitchenObjectSO GetKitchenObjectSOFromIndex(int kitchenObjectSOIndex)
+    public KitchenObjectSO GetKitchenObjectSOFromIndex(int kitchenObjectSOIndex)
     {
         return kitchenObjectSOsList.kitchenObjectSOsList[kitchenObjectSOIndex];
+    }
+    public void DestroyKitchenObject(KitchenObject kitchenObject)
+    {
+        DestroyKitchenObjectServerRpc(kitchenObject.NetworkObject);
+    }
+    [ServerRpc(RequireOwnership =false)]
+     void DestroyKitchenObjectServerRpc(NetworkObjectReference kitchenNetworkObjectRefernce)
+    {
+        kitchenNetworkObjectRefernce.TryGet(out NetworkObject kitchenNetworkObject);
+        KitchenObject kitchenObject =  kitchenNetworkObject.GetComponent<KitchenObject>();
+
+        ParentClearKitchenObjectClientRpc(kitchenNetworkObjectRefernce);
+        kitchenObject.DestroySelf();
+    }
+    [ClientRpc]
+    void ParentClearKitchenObjectClientRpc(NetworkObjectReference kitchenNetworkObjectRefernce)
+    {
+        kitchenNetworkObjectRefernce.TryGet(out NetworkObject kitchenNetworkObject);
+        KitchenObject kitchenObject = kitchenNetworkObject.GetComponent<KitchenObject>();
+
+        kitchenObject.ParentClearKitchenObject();
     }
 }

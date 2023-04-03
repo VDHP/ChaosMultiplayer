@@ -11,7 +11,7 @@ public class TrashCounter : BaseCounter
     {
         if(playerController.HasKitchenObject())
         {
-            playerController.GetKitchenObject().DestroySelf();
+            KitchenObject.DestroyKitchenObject(playerController.GetKitchenObject());
 
             OnThrownSomethingInHere?.Invoke(this, EventArgs.Empty);
         }
