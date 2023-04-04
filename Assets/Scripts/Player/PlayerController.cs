@@ -10,6 +10,7 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
     [SerializeField] private float speed;
     [SerializeField] private float rotateSpeed;
     [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] Transform kitchentObjectHoldPoint;
 
 
@@ -101,7 +102,7 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
         float distanceMove = speed * Time.deltaTime;
         float playerHeight = 2f;
         float playerWidth = .6f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirection, distanceMove);
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirection, distanceMove, countersLayerMask);
         // Check whether player move diagonally or not
         if (!canMove)
         {
@@ -110,7 +111,7 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
             Vector3 moveDirectionX = new Vector3(moveDirection.x, 0f, 0f);
             if (moveDirectionX != Vector3.zero)
             {
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionX, distanceMove);
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionX, distanceMove, countersLayerMask);
                 if (canMove)
                 {
                     moveDirection = moveDirectionX.normalized;
@@ -121,7 +122,7 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
                     Vector3 moveDirectionZ = new Vector3(0f, 0f, moveDirection.z);
                     if (moveDirectionZ != Vector3.zero)
                     {
-                        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionZ, distanceMove);
+                        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, moveDirectionZ, distanceMove, countersLayerMask);
                         if (canMove)
                         {
                             moveDirection = moveDirectionZ.normalized;
