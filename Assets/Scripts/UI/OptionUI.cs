@@ -82,7 +82,7 @@ public class OptionUI : MonoBehaviour
     {
         pressToRebindKeyTransform.gameObject.SetActive(false);
     }
-    private void Instance_OnUnPausedGame()
+    private void Instance_OnLocalUnPausedGame()
     {
         Hide();
     }
@@ -91,7 +91,7 @@ public class OptionUI : MonoBehaviour
     {
         Hide();
         UpdateVisual();
-        GameManager.Instance.OnUnPausedGame += Instance_OnUnPausedGame;
+        GameManager.Instance.OnLocalUnPausedGame += Instance_OnLocalUnPausedGame;
         HidePressToRebindKey();
     }
     void UpdateVisual()

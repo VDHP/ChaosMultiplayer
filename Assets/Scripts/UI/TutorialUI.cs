@@ -17,20 +17,20 @@ public class TutorialUI : MonoBehaviour
     {
         UpdateVisual();
         PlayerInput.Instance.OnRebinding += Instance_OnRebinding;
-        GameManager.Instance.OnStateChanged += Instance_OnStateChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged += Instance_OnLocalPlayerReadyChanged;
+    }
+
+    private void Instance_OnLocalPlayerReadyChanged()
+    {
+        if (GameManager.Instance.IsLocalPlayerReady())
+        {
+            Hide();
+        }
     }
 
     private void Instance_OnRebinding()
     {
         UpdateVisual();
-    }
-
-    private void Instance_OnStateChanged()
-    {
-        if (GameManager.Instance.IsStartCountDown())
-        {
-            Hide();
-        }
     }
 
     void UpdateVisual()
@@ -46,7 +46,7 @@ public class TutorialUI : MonoBehaviour
     void Hide()
     {
         gameObject.SetActive(false);
-    }
+    }       
     void Show()
     {
         gameObject.SetActive(true);

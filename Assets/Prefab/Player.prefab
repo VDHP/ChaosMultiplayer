@@ -91,6 +91,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   kitchentObjectHoldPoint: {fileID: 1340744770}
+  spawnPositionList:
+  - {x: 2, y: 0, z: 0}
+  - {x: -2, y: 0, z: 0}
+  - {x: 2, y: 0, z: -2}
+  - {x: -2, y: 0, z: -2}
 --- !u!114 &4232079291539493003
 MonoBehaviour:
   m_ObjectHideFlags: 0
