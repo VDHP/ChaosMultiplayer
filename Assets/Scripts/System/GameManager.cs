@@ -33,12 +33,18 @@ public class GameManager : NetworkBehaviour
 
     bool isLocalGamePause;
     bool isLocalPlayerReady;
-
+    bool autoTestGamePausedState;
 
     public override void OnNetworkSpawn()   
     {
         state.OnValueChanged += State_OnValueChanged;
         isGamePaused.OnValueChanged += IsGamePaused_OnValueChanged;
+        NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+    }
+
+    private void Singleton_OnClientDisconnectCallback(ulong obj)
+    {
+        autoTestGamePausedState = true;
     }
 
     private void IsGamePaused_OnValueChanged(bool previousValue, bool newValue)
@@ -54,7 +60,31 @@ public class GameManager : NetworkBehaviour
             OnMultiplayerGameUnPaused?.Invoke();
         }
     }
+    public void StartHost()
+    {
+        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
+        NetworkManager.Singleton.StartHost();
 
+    }
+
+    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        if (IsWaitingState())
+        {
+            connectionApprovalResponse.Approved = true;
+            connectionApprovalResponse.CreatePlayerObject = true;
+        }
+        else
+        {
+            connectionApprovalResponse.Approved = false;
+        }
+    }
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.StartClient();
+
+    }
     private void State_OnValueChanged(State previousValue, State newValue)
     {
         OnStateChanged?.Invoke();
@@ -133,6 +163,14 @@ public class GameManager : NetworkBehaviour
                 break;
         }
     }
+    private void LateUpdate()
+    {
+        if(autoTestGamePausedState)
+        {
+            autoTestGamePausedState = false;
+            TestGamePausedState();
+        }
+    }
     public bool IsLocalPlayerReady()
     {
         return isLocalPlayerReady;
@@ -198,5 +236,9 @@ public class GameManager : NetworkBehaviour
         }
         // all player unpaused
         isGamePaused.Value = false;
+    }
+    bool IsWaitingState()
+    {
+        return state.Value == State.WaitingToStart;
     }
 }

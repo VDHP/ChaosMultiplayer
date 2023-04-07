@@ -36,6 +36,15 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
         PlayerInput.Instance.OnInteractAction += PlayerInputVector_OnInteractAction;
         PlayerInput.Instance.OnInteractAlternate += GameInput_OnInteractAlternate;
     }
+
+    private void Singleton_OnClientDisconnectCallback(ulong clientID)
+    {
+        if(clientID == OwnerClientId && HasKitchenObject())
+        {
+            KitchenObject.DestroyKitchenObject(GetKitchenObject());
+        }
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -44,6 +53,11 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
         }
         transform.position = spawnPositionList[(int)OwnerClientId];
         OnAnyPlayerSpawned?.Invoke();
+            
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+        }
     }
     public static void ResetStaticData()
     {
