@@ -60,31 +60,7 @@ public class GameManager : NetworkBehaviour
             OnMultiplayerGameUnPaused?.Invoke();
         }
     }
-    public void StartHost()
-    {
-        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
-        NetworkManager.Singleton.StartHost();
-
-    }
-
-    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
-    {
-        if (IsWaitingState())
-        {
-            connectionApprovalResponse.Approved = true;
-            connectionApprovalResponse.CreatePlayerObject = true;
-        }
-        else
-        {
-            connectionApprovalResponse.Approved = false;
-        }
-    }
-
-    public void StartClient()
-    {
-        NetworkManager.Singleton.StartClient();
-
-    }
+    
     private void State_OnValueChanged(State previousValue, State newValue)
     {
         OnStateChanged?.Invoke();
