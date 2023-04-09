@@ -9160,7 +9160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1079770411
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11496,6 +11496,8 @@ MonoBehaviour:
   countDownToStartTimer:
     m_InternalValue: 3
   gamePlayingTimerMax: 100
+  playerPrefab: {fileID: 8643847462221677529, guid: c59b00563c8e7054aad48431a4ba94e8,
+    type: 3}
 --- !u!4 &1423723041
 Transform:
   m_ObjectHideFlags: 0
