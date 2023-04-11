@@ -11,28 +11,49 @@ public class KitchenObjectMultiplayer : NetworkBehaviour
 
     public event Action OnTryingToJoinGame;
     public event Action OnFailedToJoinGame;
+    public event Action OnPlayerDataNetworkListChanged;
     
     [SerializeField] KitchenObjectSOList kitchenObjectSOsList;
 
      const int MAX_PLAYER_AMOUNT = 4;
 
-
+    NetworkList<PlayerData> playerDataNetworkList;
+    
     private void Awake()
     {
         Instance = this;
 
         DontDestroyOnLoad(gameObject);
+
+        playerDataNetworkList = new NetworkList<PlayerData>();
+        playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
     }
+
+    private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
+    {
+        OnPlayerDataNetworkListChanged?.Invoke();
+    }
+
     public void StartHost()
     {
         NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
+        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+
         NetworkManager.Singleton.StartHost();
 
     }
 
+    private void NetworkManager_OnClientConnectedCallback(ulong clientID)
+    {
+        playerDataNetworkList.Add(new PlayerData
+        {
+            clientID = clientID
+        });
+    }
+
     private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
     {
-        if(SceneManager.GetActiveScene().name != Loader.Scene.SelectCharacterScene.ToString())
+        if(SceneManager.GetActiveScene().name != Loader.Scene.SelectCharacterScene.ToString() && connectionApprovalRequest.ClientNetworkId != 0)
         {
             connectionApprovalResponse.Approved = false;
             connectionApprovalResponse.Reason = "Game has already started";
@@ -107,5 +128,13 @@ public class KitchenObjectMultiplayer : NetworkBehaviour
         KitchenObject kitchenObject = kitchenNetworkObject.GetComponent<KitchenObject>();
 
         kitchenObject.ParentClearKitchenObject();
+    }
+
+    public bool IsPlayerConnectedWithIndex(int index) { 
+        return index < playerDataNetworkList.Count;
+    }
+
+    public PlayerData GetPlayerDataFromIndex(int playerIndex) {
+        return playerDataNetworkList[playerIndex];
     }
 }
