@@ -18056,7 +18056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 981991f7819580040beb90b5e1392ad6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayAgainButton: {fileID: 1799534583}
+  playAgainButton: {fileID: 1799534583}
 --- !u!1001 &2129923532
 PrefabInstance:
   m_ObjectHideFlags: 0

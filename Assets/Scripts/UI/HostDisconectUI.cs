@@ -6,9 +6,18 @@ using UnityEngine.UI;
 
 public class HostDisconectUI : MonoBehaviour
 {
-    [SerializeField] Button PlayAgainButton;
+    [SerializeField] Button playAgainButton;
 
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        playAgainButton.onClick.AddListener(() =>
+        {
+            NetworkManager.Singleton.Shutdown();
+            Loader.Load(Loader.Scene.MainMenuScene);
+        });
+    }
     void Start()
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;

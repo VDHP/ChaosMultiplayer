@@ -1,12 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KitchenObjectMultiplayer : NetworkBehaviour
 {
     public static KitchenObjectMultiplayer Instance { get; private set; }
+
+    public event Action OnTryingToJoinGame;
+    public event Action OnFailedToJoinGame;
+    
     [SerializeField] KitchenObjectSOList kitchenObjectSOsList;
+
+     const int MAX_PLAYER_AMOUNT = 4;
+
 
     private void Awake()
     {
@@ -23,14 +32,35 @@ public class KitchenObjectMultiplayer : NetworkBehaviour
 
     private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
     {
+        if(SceneManager.GetActiveScene().name != Loader.Scene.SelectCharacterScene.ToString())
+        {
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Game has already started";
+            return;
+        }
+        if(NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_PLAYER_AMOUNT)
+        {
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Game is full";
+            return;
+        }
         connectionApprovalResponse.Approved = true;
     }
 
     public void StartClient()
     {
+        OnTryingToJoinGame?.Invoke();
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
 
     }
+
+    private void NetworkManager_OnClientDisconnectCallback(ulong obj)
+    {
+        OnFailedToJoinGame?.Invoke();
+    }
+
     public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         SpawnKitchenObjectServerRpc(GetKitchenObjectSOIndexOf(kitchenObjectSO), kitchenObjectParent.GetNetworkObject());

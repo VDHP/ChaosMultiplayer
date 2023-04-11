@@ -53,7 +53,7 @@ public class GameManager : NetworkBehaviour
          foreach(ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
         {
             Transform gamePlayerTransform = Instantiate(playerPrefab);
-            gamePlayerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, true);
+            gamePlayerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, true);  
         }
     }
 
