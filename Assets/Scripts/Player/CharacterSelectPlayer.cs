@@ -6,6 +6,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 {
     [SerializeField] int playerIndex;
     [SerializeField] GameObject readyObject;
+    [SerializeField] PlayerVisual playerVisual;
 
     private void Start()
     {
@@ -32,6 +33,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 
             PlayerData playerData = KitchenObjectMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
             readyObject.SetActive(CharacterSelectedReady.Instance.IsPlayerReady(playerData.clientID));
+            playerVisual.SetPlayerColor(KitchenObjectMultiplayer.Instance.GetPlayerColor(playerData.colorID)); 
         }
         else
         {

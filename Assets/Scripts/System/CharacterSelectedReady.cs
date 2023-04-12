@@ -11,6 +11,7 @@ public class CharacterSelectedReady : NetworkBehaviour
 
     public event Action OnReadyChanged;
 
+     
     Dictionary<ulong, bool> playerReadyDictionary = new Dictionary<ulong, bool>();
     private void Awake()
     {
