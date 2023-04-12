@@ -55,7 +55,7 @@ public class PlayerController : NetworkBehaviour, IKitchenObjectParent
         {
             LocalInstance = this;
         }
-        transform.position = spawnPositionList[(int)OwnerClientId];
+        transform.position = spawnPositionList[KitchenObjectMultiplayer.Instance.GetPlayerDataIndexFromFromClientID(OwnerClientId)];
         OnAnyPlayerSpawned?.Invoke();
             
         if (IsServer)
