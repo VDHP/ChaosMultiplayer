@@ -22,6 +22,7 @@ public class GameManager : NetworkBehaviour
     }
     [SerializeField] NetworkVariable<float> countDownToStartTimer = new NetworkVariable<float>(3f);
     [SerializeField] float gamePlayingTimerMax = 10f;
+    [SerializeField] Transform playerPrefab;
 
     NetworkVariable<float> gamePlayingTimer = new NetworkVariable<float>(0f);
     NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
@@ -39,7 +40,21 @@ public class GameManager : NetworkBehaviour
     {
         state.OnValueChanged += State_OnValueChanged;
         isGamePaused.OnValueChanged += IsGamePaused_OnValueChanged;
-        NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+        }
+
+    }
+
+    private void SceneManager_OnLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+         foreach(ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            Transform gamePlayerTransform = Instantiate(playerPrefab);
+            gamePlayerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, true);  
+        }
     }
 
     private void Singleton_OnClientDisconnectCallback(ulong obj)
@@ -60,31 +75,7 @@ public class GameManager : NetworkBehaviour
             OnMultiplayerGameUnPaused?.Invoke();
         }
     }
-    public void StartHost()
-    {
-        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
-        NetworkManager.Singleton.StartHost();
-
-    }
-
-    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
-    {
-        if (IsWaitingState())
-        {
-            connectionApprovalResponse.Approved = true;
-            connectionApprovalResponse.CreatePlayerObject = true;
-        }
-        else
-        {
-            connectionApprovalResponse.Approved = false;
-        }
-    }
-
-    public void StartClient()
-    {
-        NetworkManager.Singleton.StartClient();
-
-    }
+    
     private void State_OnValueChanged(State previousValue, State newValue)
     {
         OnStateChanged?.Invoke();
