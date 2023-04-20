@@ -13,7 +13,6 @@ public class CreateLobbyUI : MonoBehaviour
 
     private void Awake()
     {
-        lobbyNameInputField.text = "Phong: " + Random.Range(100, 1000);
         closeButton.onClick.AddListener(() =>
         {
             Hide();

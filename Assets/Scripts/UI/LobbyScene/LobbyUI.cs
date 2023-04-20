@@ -73,4 +73,8 @@ public class LobbyUI : MonoBehaviour
             lobbyTransform.GetComponent<LobbyTemplateSingleUI>().SetLobby(lobby);
         }
     }
+    private void OnDestroy()
+    {
+        KitchenGameLobby.Instance.OnListLobbyChanged -= KitchenGameLobby_OnListLobbyChanged;
+    }
 }
