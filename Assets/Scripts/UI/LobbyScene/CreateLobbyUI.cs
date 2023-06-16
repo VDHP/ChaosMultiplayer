@@ -16,6 +16,7 @@ public class CreateLobbyUI : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             Hide();
+            LobbyUI.Instance.ShowInteractUI();
         });
         createPrivateButton.onClick.AddListener(() =>
         {
@@ -29,6 +30,8 @@ public class CreateLobbyUI : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+
+        createPuclicButton.Select();
     }
     void Hide()
     {

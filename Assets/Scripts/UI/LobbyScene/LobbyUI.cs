@@ -16,7 +16,9 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] TMP_InputField playerNameInputField;
     [SerializeField] Transform lobbyContainer;
     [SerializeField] Transform lobbyTemplate;
+    [SerializeField] Transform InteractUI;
 
+    public static LobbyUI Instance { get; private set; }
     private void Awake()
     {
         
@@ -28,6 +30,7 @@ public class LobbyUI : MonoBehaviour
         createLobbyButton.onClick.AddListener(() =>
         {
             createLobbyUI.Show();
+            HideInteractUI();
         });
         quickJoinButton.onClick.AddListener(() =>
         {
@@ -39,6 +42,8 @@ public class LobbyUI : MonoBehaviour
         });
 
         lobbyTemplate.gameObject.SetActive(false);
+
+        Instance = this;
     }
     private void Start()
     {
@@ -76,5 +81,15 @@ public class LobbyUI : MonoBehaviour
     private void OnDestroy()
     {
         KitchenGameLobby.Instance.OnListLobbyChanged -= KitchenGameLobby_OnListLobbyChanged;
+    }
+    public void HideInteractUI()
+    {
+        InteractUI.gameObject.SetActive (false);
+    }
+    public void ShowInteractUI()
+    {
+        InteractUI.gameObject.SetActive (true);
+
+        createLobbyButton.Select();
     }
 }
